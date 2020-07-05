@@ -54,28 +54,28 @@ const login = (req, res) => {
     res.send(e)
   })
 
-  // let sql = "SELECT * FROM usersCredentials WHERE username = ?"
-  // sql = mysql.format(sql, [ username ])
+  let sql = "SELECT * FROM usersCredentials WHERE username = ?"
+  sql = mysql.format(sql, [ username ])
 
-  // pool.query(sql, (err, rows) => {
-  //   if (err) return handleSQLError(res, err)
-  //   if (!rows.length) return res.status(404).send('No matching users')
+  pool.query(sql, (err, rows) => {
+    if (err) return handleSQLError(res, err)
+    if (!rows.length) return res.status(404).send('No matching users')
 
-  //   const hash = rows[0].password
-  //   bcrypt.compare(password, hash)
-  //     .then(result => {
-  //       if (!result) return res.status(400).send('Invalid password')
+    const hash = rows[0].password
+    bcrypt.compare(password, hash)
+      .then(result => {
+        if (!result) return res.status(400).send('Invalid password')
 
-  //       const data = { ...rows[0] }
-  //       data.password = 'REDACTED'
+        const data = { ...rows[0] }
+        data.password = 'REDACTED'
 
-  //       const token = jwt.sign(data, 'secret')
-  //       res.json({
-  //         msg: 'Login successful',
-  //         token
-  //       })
-  //     })
-  // })
+        const token = jwt.sign(data, 'secret')
+        res.json({
+          msg: 'Login successful',
+          token
+        })
+      })
+  })
 }
 
 module.exports = {
